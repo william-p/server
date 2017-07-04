@@ -38,7 +38,6 @@ use OCP\ITags;
 use OCP\Files\FileInfo;
 use OCP\IRequest;
 use OCP\IConfig;
-use OCP\Files\FileInfo;
 
 class FilesReportPluginTest extends \Test\TestCase {
 	/** @var \Sabre\DAV\Server|\PHPUnit_Framework_MockObject_MockObject */
@@ -128,7 +127,8 @@ class FilesReportPluginTest extends \Test\TestCase {
 			new \OCA\DAV\Connector\Sabre\FilesPlugin(
 				$this->tree,
 				$this->createMock(IConfig::class),
-				$this->createMock(IRequest::class)
+				$this->createMock(IRequest::class),
+				$this->createMock(IPreview::class)
 			)
 		);
 
@@ -504,20 +504,17 @@ class FilesReportPluginTest extends \Test\TestCase {
 
 		$this->assertCount(2, $responses);
 
-		$this->assertEquals(200, $responses[0]->getHttpStatus());
-		$this->assertEquals(200, $responses[1]->getHttpStatus());
+		$this->assertEquals('/files/username/node1', $responses[0]['href']);
+		$this->assertEquals('/files/username/sub/node2', $responses[1]['href']);
 
-		$this->assertEquals('http://example.com/owncloud/remote.php/dav/files/username/node1', $responses[0]->getHref());
-		$this->assertEquals('http://example.com/owncloud/remote.php/dav/files/username/sub/node2', $responses[1]->getHref());
-
-		$props1 = $responses[0]->getResponseProperties();
+		$props1 = $responses[0];
 		$this->assertEquals('111', $props1[200]['{http://owncloud.org/ns}fileid']);
 		$this->assertNull($props1[404]['{DAV:}getcontentlength']);
 		$this->assertInstanceOf('\Sabre\DAV\Xml\Property\ResourceType', $props1[200]['{DAV:}resourcetype']);
 		$resourceType1 = $props1[200]['{DAV:}resourcetype']->getValue();
 		$this->assertEquals('{DAV:}collection', $resourceType1[0]);
 
-		$props2 = $responses[1]->getResponseProperties();
+		$props2 = $responses[1];
 		$this->assertEquals('1024', $props2[200]['{DAV:}getcontentlength']);
 		$this->assertEquals('222', $props2[200]['{http://owncloud.org/ns}fileid']);
 		$this->assertInstanceOf('\Sabre\DAV\Xml\Property\ResourceType', $props2[200]['{DAV:}resourcetype']);
