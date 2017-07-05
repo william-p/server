@@ -9,6 +9,7 @@
  * @author Morris Jobke <hey@morrisjobke.de>
  * @author Robin McCorkell <robin@mccorkell.me.uk>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
+ * @author Thomas Citharel <tcit@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -108,4 +109,12 @@ interface IL10N {
 	 * @since 7.0.0
 	 */
 	public function getLanguageCode();
+
+	/**
+	 * * The code (en_US, fr_CA, ...) of the locale that is used for this IL10N object
+	 *
+	 * @return string locale
+	 * @since 13.0.0
+	 */
+	public function getLocaleCode();
 }

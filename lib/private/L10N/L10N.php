@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2016, ownCloud, Inc.
  *
  * @author Joas Schilling <coding@schilljs.com>
+ * @author Thomas Citharel <tcit@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -37,6 +38,9 @@ class L10N implements IL10N {
 	/** @var string Language of this object */
 	protected $lang;
 
+	/** @var string Locale of this object */
+	protected $locale;
+
 	/** @var string Plural forms (string) */
 	private $pluralFormString = 'nplurals=2; plural=(n != 1);';
 
@@ -50,12 +54,14 @@ class L10N implements IL10N {
 	 * @param IFactory $factory
 	 * @param string $app
 	 * @param string $lang
+	 * @param string $locale
 	 * @param array $files
 	 */
-	public function __construct(IFactory $factory, $app, $lang, array $files) {
+	public function __construct(IFactory $factory, $app, $lang, $locale, array $files) {
 		$this->factory = $factory;
 		$this->app = $app;
 		$this->lang = $lang;
+		$this->locale = $locale;
 
 		$this->translations = [];
 		foreach ($files as $languageFile) {
@@ -70,6 +76,15 @@ class L10N implements IL10N {
 	 */
 	public function getLanguageCode() {
 		return $this->lang;
+	}
+
+	/**
+	 * The code (en_US, fr_CA, ...) of the locale that is used for this instance
+	 *
+	 * @return string locale
+	 */
+	public function getLocaleCode() {
+		return $this->locale;
 	}
 
 	/**
@@ -136,17 +151,19 @@ class L10N implements IL10N {
 	 *  - jsdate: Returns the short JS date format
 	 */
 	public function l($type, $data = null, $options = array()) {
-		// Use the language of the instance
-		$locale = $this->getLanguageCode();
-		if ($locale === 'sr@latin') {
-			$locale = 'sr_latn';
+		if (null === $this->locale) {
+			// Use the language of the instance
+			$this->locale = $this->getLanguageCode();
+		}
+		if ($this->locale === 'sr@latin') {
+			$this->locale = 'sr_latn';
 		}
 
 		if ($type === 'firstday') {
-			return (int) Calendar::getFirstWeekday($locale);
+			return (int) Calendar::getFirstWeekday($this->locale);
 		}
 		if ($type === 'jsdate') {
-			return (string) Calendar::getDateFormat('short', $locale);
+			return (string) Calendar::getDateFormat('short', $this->locale);
 		}
 
 		$value = new \DateTime();
@@ -163,11 +180,11 @@ class L10N implements IL10N {
 		$width = $options['width'];
 		switch ($type) {
 			case 'date':
-				return (string) Calendar::formatDate($value, $width, $locale);
+				return (string) Calendar::formatDate($value, $width, $this->locale);
 			case 'datetime':
-				return (string) Calendar::formatDatetime($value, $width, $locale);
+				return (string) Calendar::formatDatetime($value, $width, $this->locale);
 			case 'time':
-				return (string) Calendar::formatTime($value, $width, $locale);
+				return (string) Calendar::formatTime($value, $width, $this->locale);
 			default:
 				return false;
 		}
