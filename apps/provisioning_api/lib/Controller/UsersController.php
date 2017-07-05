@@ -10,6 +10,7 @@
  * @author Roeland Jago Douma <roeland@famdouma.nl>
  * @author Thomas Müller <thomas.mueller@tmit.eu>
  * @author Tom Needham <tom@owncloud.com>
+ * @author Thomas Citharel <tcit@tcit.fr>
  *
  * @license AGPL-3.0
  *
@@ -287,6 +288,7 @@ class UsersController extends OCSController {
 		$data[AccountManager::PROPERTY_TWITTER] = $userAccount[AccountManager::PROPERTY_TWITTER]['value'];
 		$data['groups'] = $gids;
 		$data['language'] = $this->config->getUserValue($targetUserObject->getUID(), 'core', 'lang');
+		$data['locale'] = $this->config->getUserValue($targetUserObject->getUID(), 'core', 'locale');
 
 		return $data;
 	}
@@ -326,6 +328,7 @@ class UsersController extends OCSController {
 			if ($this->config->getSystemValue('force_language', false) === false ||
 				$this->groupManager->isAdmin($currentLoggedInUser->getUID())) {
 				$permittedFields[] = 'language';
+				$permittedFields[] = 'locale';
 			}
 
 			if ($this->appManager->isEnabledForUser('federatedfilesharing')) {
@@ -354,6 +357,7 @@ class UsersController extends OCSController {
 				$permittedFields[] = AccountManager::PROPERTY_EMAIL;
 				$permittedFields[] = 'password';
 				$permittedFields[] = 'language';
+				$permittedFields[] = 'locale';
 				$permittedFields[] = AccountManager::PROPERTY_PHONE;
 				$permittedFields[] = AccountManager::PROPERTY_ADDRESS;
 				$permittedFields[] = AccountManager::PROPERTY_WEBSITE;
@@ -404,6 +408,10 @@ class UsersController extends OCSController {
 					throw new OCSException('Invalid language', 102);
 				}
 				$this->config->setUserValue($targetUser->getUID(), 'core', 'lang', $value);
+				break;
+			case 'locale':
+				// do some stuff
+				$this->config->setUserValue($targetUser->getUID(), 'core', 'locale', $value);
 				break;
 			case AccountManager::PROPERTY_EMAIL:
 				if(filter_var($value, FILTER_VALIDATE_EMAIL)) {
