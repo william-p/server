@@ -316,6 +316,7 @@ if($_['passwordChangeSupported']) {
 </form>
 <?php } ?>
 
+<?php if (isset($_['activelocale'])) { ?>
 <form id="locale" class="section">
 	<h2>
 		<label for="localeinput"><?php p($l->t('Locale'));?></label>
@@ -341,3 +342,4 @@ if($_['passwordChangeSupported']) {
 		<?php endforeach;?>
 	</select>
 </form>
+<?php } ?>

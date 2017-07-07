@@ -715,7 +715,7 @@ class UsersControllerTest extends TestCase {
 			->method('getDisplayName')
 			->will($this->returnValue('Demo User'));
 		$targetUser
-			->expects($this->exactly(4))
+			->expects($this->exactly(5))
 			->method('getUID')
 			->will($this->returnValue('UID'));
 
@@ -731,6 +731,7 @@ class UsersControllerTest extends TestCase {
 			'twitter' => 'twitter',
 			'groups' => ['group0', 'group1', 'group2'],
 			'language' => 'de',
+			'locale' => null,
 		];
 		$this->assertEquals($expected, $this->invokePrivate($this->api, 'getUserData', ['UserToGet']));
 	}
@@ -800,7 +801,7 @@ class UsersControllerTest extends TestCase {
 			->method('getDisplayName')
 			->will($this->returnValue('Demo User'));
 		$targetUser
-			->expects($this->exactly(4))
+			->expects($this->exactly(5))
 			->method('getUID')
 			->will($this->returnValue('UID'));
 		$this->accountManager->expects($this->any())->method('getUser')
@@ -826,6 +827,7 @@ class UsersControllerTest extends TestCase {
 			'twitter' => 'twitter',
 			'groups' => [],
 			'language' => 'da',
+			'locale' => null,
 		];
 		$this->assertEquals($expected, $this->invokePrivate($this->api, 'getUserData', ['UserToGet']));
 	}
@@ -931,7 +933,7 @@ class UsersControllerTest extends TestCase {
 			->method('getEMailAddress')
 			->will($this->returnValue('subadmin@owncloud.org'));
 		$targetUser
-			->expects($this->exactly(4))
+			->expects($this->exactly(5))
 			->method('getUID')
 			->will($this->returnValue('UID'));
 		$this->config
@@ -961,6 +963,7 @@ class UsersControllerTest extends TestCase {
 			'twitter' => 'twitter',
 			'groups' => [],
 			'language' => 'ru',
+			'locale' => null,
 		];
 		$this->assertEquals($expected, $this->invokePrivate($this->api, 'getUserData', ['subadmin']));
 	}
