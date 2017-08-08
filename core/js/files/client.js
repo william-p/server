@@ -394,6 +394,26 @@
 		},
 
 		/**
+		 * Parse the Sabre exception out of the given response, if any
+		 *
+		 * @param {Object} response object
+		 * @return {Object} array of parsed message and exception (only the first one)
+		 */
+		_getSabreException: function(response) {
+			var result = {};
+			var xml = response.xhr.responseXML;
+			var messages = xml.getElementsByTagNameNS('http://sabredav.org/ns', 'message');
+			var exceptions = xml.getElementsByTagNameNS('http://sabredav.org/ns', 'exception');
+			if (messages.length) {
+				result.message = messages[0].textContent;
+			}
+			if (exceptions.length) {
+				result.exception = exceptions[0].textContent;
+			}
+			return result;
+		},
+
+		/**
 		 * Returns the default PROPFIND properties to use during a call.
 		 *
 		 * @return {Array.<Object>} array of properties
@@ -446,7 +466,8 @@
 					}
 					deferred.resolve(result.status, results);
 				} else {
-					deferred.reject(result.status);
+					result = _.extend(result, self._getSabreException(result));
+					deferred.reject(result.status, result);
 				}
 			});
 			return promise;
@@ -520,7 +541,8 @@
 					var results = self._parseResult(result.body);
 					deferred.resolve(result.status, results);
 				} else {
-					deferred.reject(result.status);
+					result = _.extend(result, self._getSabreException(result));
+					deferred.reject(result.status, result);
 				}
 			});
 			return promise;
@@ -559,7 +581,8 @@
 					if (self._isSuccessStatus(result.status)) {
 						deferred.resolve(result.status, self._parseResult([result.body])[0]);
 					} else {
-						deferred.reject(result.status);
+						result = _.extend(result, self._getSabreException(result));
+						deferred.reject(result.status, result);
 					}
 				}
 			);
@@ -589,7 +612,8 @@
 					if (self._isSuccessStatus(result.status)) {
 						deferred.resolve(result.status, result.body);
 					} else {
-						deferred.reject(result.status);
+						result = _.extend(result, self._getSabreException(result));
+						deferred.reject(result.status, result);
 					}
 				}
 			);
@@ -638,7 +662,8 @@
 					if (self._isSuccessStatus(result.status)) {
 						deferred.resolve(result.status);
 					} else {
-						deferred.reject(result.status);
+						result = _.extend(result, self._getSabreException(result));
+						deferred.reject(result.status, result);
 					}
 				}
 			);
@@ -662,7 +687,8 @@
 					if (self._isSuccessStatus(result.status)) {
 						deferred.resolve(result.status);
 					} else {
-						deferred.reject(result.status);
+						result = _.extend(result, self._getSabreException(result));
+						deferred.reject(result.status, result);
 					}
 				}
 			);
@@ -725,11 +751,12 @@
 				this._buildUrl(path),
 				headers
 			).then(
-				function(response) {
-					if (self._isSuccessStatus(response.status)) {
-						deferred.resolve(response.status);
+				function(result) {
+					if (self._isSuccessStatus(result.status)) {
+						deferred.resolve(result.status);
 					} else {
-						deferred.reject(response.status);
+						result = _.extend(result, self._getSabreException(result));
+						deferred.reject(result.status, result);
 					}
 				}
 			);

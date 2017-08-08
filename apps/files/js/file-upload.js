@@ -286,7 +286,23 @@ OC.FileUpload.prototype = {
 	 */
 	getResponse: function() {
 		var response = this.data.response();
-		if (typeof response.result !== 'string') {
+		if (response.errorThrown) {
+			// attempt parsing Sabre exception is available
+			var xml = response.jqXHR.responseXML;
+			if (xml.documentElement.localName === 'error' && xml.documentElement.namespaceURI === 'DAV:') {
+				var messages = xml.getElementsByTagNameNS('http://sabredav.org/ns', 'message');
+				var exceptions = xml.getElementsByTagNameNS('http://sabredav.org/ns', 'exception');
+				if (messages.length) {
+					response.message = messages[0].textContent;
+				}
+				if (exceptions.length) {
+					response.exception = exceptions[0].textContent;
+				}
+				return response;
+			}
+		}
+
+		if (typeof response.result !== 'string' && response.result) {
 			//fetch response from iframe
 			response = $.parseJSON(response.result[0].body.innerText);
 			if (!response) {
@@ -900,6 +916,7 @@ OC.Uploader.prototype = _.extend({
 						status = upload.getResponseStatus();
 					}
 					self.log('fail', e, upload);
+					self._hideProgressBar();
 
 					if (data.textStatus === 'abort') {
 						self.showUploadCancelMessage();
@@ -916,7 +933,12 @@ OC.Uploader.prototype = _.extend({
 						self.cancelUploads();
 					} else {
 						// HTTP connection problem or other error
-						OC.Notification.show(data.errorThrown, {type: 'error'});
+						var message = '';
+						if (upload) {
+							var response = upload.getResponse();
+							message = response.message;
+						}
+						OC.Notification.show(message || data.errorThrown, {type: 'error'});
 					}
 
 					if (upload) {
@@ -1105,6 +1127,19 @@ OC.Uploader.prototype = _.extend({
 					var upload = self.getUpload(data);
 					upload.done().then(function() {
 						self.trigger('done', e, upload);
+					}).fail(function(status, response) {
+						var message = response.message;
+						self._hideProgressBar();
+						if (status === 507) {
+							// not enough space
+							OC.Notification.show(message || t('files', 'Not enough free space'), {type: 'error'});
+							self.cancelUploads();
+						} else if (status === 409) {
+							OC.Notification.show(message || t('files', 'Target folder does not exist any more'), {type: 'error'});
+						} else {
+							OC.Notification.show(message || t('files', 'Error when assembling chunks, status code {status}', {status: status}), {type: 'error'});
+						}
+						self.trigger('fail', e, data);
 					});
 				});
 				fileupload.on('fileuploaddrop', function(e, data) {
