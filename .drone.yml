@@ -235,6 +235,14 @@ pipeline:
       matrix:
         DB: mysql
         PHP: 7.1
+  mysql-php7.2:
+    image: nextcloudci/php7.2:php7.2-4
+    commands:
+      - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh mysql
+    when:
+      matrix:
+        DB: mysql
+        PHP: 7.2
   mysql5.6-php5.6:
     image: nextcloudci/php5.6:php5.6-7
     commands:
@@ -325,6 +333,14 @@ pipeline:
       matrix:
         DB: mysqlmb4
         PHP: 7.1
+  mysqlmb4-php7.2:
+    image: nextcloudci/php7.2:php7.2-4
+    commands:
+      - NOCOVERAGE=true TEST_SELECTION=DB ./autotest.sh sqlite
+    when:
+      matrix:
+        DB: mysqlmb4
+        PHP: 7.2
   integration-capabilities_features:
     image: nextcloudci/integration-php7.0:integration-php7.0-4
     commands:
@@ -693,6 +709,9 @@ matrix:
     - DB: mysql
       PHP: 7.1
       ENABLE_REDIS: true
+    - DB: mysql
+      PHP: 7.2
+      ENABLE_REDIS: false
     - DB: mysql5.6
       PHP: 5.6
       ENABLE_REDIS: true
@@ -726,6 +745,9 @@ matrix:
     - DB: mysqlmb4
       PHP: 7.1
       ENABLE_REDIS: true
+    - DB: mysqlmb4
+      PHP: 7.2
+      ENABLE_REDIS: false
     - TESTS: integration-capabilities_features
     - TESTS: integration-federation_features
     - TESTS: integration-maintenance-mode
