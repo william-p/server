@@ -60,7 +60,7 @@ $maxUploadFilesize = min($upload_max_filesize, $post_max_size);
 				</span>
 				<?php } ?>
 				<a href="<?php p($_['downloadURL']); ?>" id="download" class="button">
-					<span class="icon icon-download"></span>
+					<span class="icon icon-download-white"></span>
 					<span id="download-text"><?php p($l->t('Download'))?></span>
 				</a>
 			<?php } ?>

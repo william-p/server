@@ -85,6 +85,19 @@ textarea,
 		}
 	}
 }
+#header button,
+#header .button {
+	border: 1px solid $color-primary-text;
+	background-color: transparent;
+	color: $color-primary-text;
+	&:not(:disabled) {
+		&:hover,
+		&:focus,
+		&:active {
+			border-color: rgba($color-primary-text, .5) !important;
+		}
+	}
+}
 
 /* Specific override */
 input {
