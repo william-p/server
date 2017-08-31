@@ -994,6 +994,11 @@ class Server extends ServerContainer implements IServerContainer {
 		});
 		$this->registerAlias('ShareManager', \OCP\Share\IManager::class);
 
+		$this->registerService(\OCP\Collaboration\Collaborators\ISearch::class, function(Server $c) {
+			return new Collaboration\Collaborators\Search($c);
+		});
+		$this->registerAlias('CollaboratorSearch', \OCP\Collaboration\Collaborators\ISearch::class);
+
 		$this->registerService('SettingsManager', function (Server $c) {
 			$manager = new \OC\Settings\Manager(
 				$c->getLogger(),
@@ -1775,6 +1780,13 @@ class Server extends ServerContainer implements IServerContainer {
 	 */
 	public function getShareManager() {
 		return $this->query('ShareManager');
+	}
+
+	/**
+	 * @return \OCP\Collaboration\Collaborators\ISearch
+	 */
+	public function getCollaboratorSearch() {
+		return $this->query('CollaboratorSearch');
 	}
 
 	/**
