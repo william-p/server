@@ -247,6 +247,28 @@ class ThemingDefaults extends \OC_Defaults {
 		return $variables;
 	}
 
+	public function replaceImagePath($app, $image) {
+		if($app==="") {
+			$app = "core";
+		}
+		$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
+
+		if ($image === "favicon.ico" && $this->shouldReplaceIcons()) {
+			return $this->urlGenerator->linkToRoute('theming.Icon.getFavicon', ['app' => $app]) . '?v=' . $cacheBusterValue;
+		}
+		if ($image === "favicon-touch.png" && $this->shouldReplaceIcons()) {
+			return $this->urlGenerator->linkToRoute('theming.Icon.getTouchIcon', ['app' => $app]) . '?v=' . $cacheBusterValue;
+		}
+		if ($image === "manifest.json") {
+			$appPath = \OC_App::getAppPath($app);
+			if ($appPath && file_exists($appPath . "/img/manifest.json")) {
+				return true;
+			}
+			return $this->urlGenerator->linkToRoute('theming.Theming.getManifest') . '?v=' . $cacheBusterValue;
+		}
+		return false;
+	}
+
 	/**
 	 * Check if Imagemagick is enabled and if SVG is supported
 	 * otherwise we can't render custom icons

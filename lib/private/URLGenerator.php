@@ -181,14 +181,8 @@ class URLGenerator implements IURLGenerator {
 		} elseif (!file_exists(\OC::$SERVERROOT . "/themes/$theme/core/img/$basename.svg")
 			&& file_exists(\OC::$SERVERROOT . "/themes/$theme/core/img/$basename.png")) {
 			$path =  \OC::$WEBROOT . "/themes/$theme/core/img/$basename.png";
-		} elseif($themingEnabled && $image === "favicon.ico" && \OC::$server->getThemingDefaults()->shouldReplaceIcons()) {
-			$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
-			if($app==="") { $app = "core"; }
-			$path = $this->linkToRoute('theming.Icon.getFavicon', [ 'app' => $app ]) . '?v='. $cacheBusterValue;
-		} elseif($themingEnabled && $image === "favicon-touch.png" && \OC::$server->getThemingDefaults()->shouldReplaceIcons()) {
-			$cacheBusterValue = $this->config->getAppValue('theming', 'cachebuster', '0');
-			if($app==="") { $app = "core"; }
-			$path = $this->linkToRoute('theming.Icon.getTouchIcon', [ 'app' => $app ]) . '?v='. $cacheBusterValue;
+		} elseif($themingEnabled && \OC::$server->getThemingDefaults()->replaceImagePath($app, $image)) {
+			$path = \OC::$server->getThemingDefaults()->replaceImagePath($app, $image);
 		} elseif ($appPath && file_exists($appPath . "/img/$image")) {
 			$path =  \OC_App::getAppWebPath($app) . "/img/$image";
 		} elseif ($appPath && !file_exists($appPath . "/img/$basename.svg")

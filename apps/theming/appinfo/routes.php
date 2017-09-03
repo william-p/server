@@ -61,6 +61,11 @@ return ['routes' => [
 		'verb' => 'GET',
 	],
 	[
+		'name' => 'Theming#getManifest',
+		'url' => '/manifest',
+		'verb' => 'GET'
+	],
+	[
 		'name'	=> 'Icon#getFavicon',
 		'url' => '/favicon/{app}',
 		'verb' => 'GET',
