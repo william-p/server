@@ -406,7 +406,7 @@ nav {
 	position: absolute;
 	pointer-events: none;
 	border: 0 solid transparent;
-	border-bottom-color: white;
+	border-bottom-color: $color-main-background;
 	border-width: 10px;
 	transform: translateX(-50%);
 	left: 26px;
