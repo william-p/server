@@ -269,8 +269,8 @@ input {
 			}
 			&:checked + label:before {
 				box-shadow: inset 0px 0px 0px 2px $color-main-text;
-				background-color: nc-darken($color-main-background, 8%);
-				border-color: nc-darken($color-main-background, 8%)
+				background-color: $color-border;
+				border-color: $color-border
 			}
 			&:disabled + label:before {
 				background-color: nc-lighten($color-main-text, 33%) !important; /* override other status */
@@ -445,8 +445,8 @@ input {
 			}
 			&.select2-search-choice-focus,
 			&:hover {
-				background-color: nc-darken($color-main-background, 8%);
-				border-color: nc-darken($color-main-background, 8%);
+				background-color: $color-border;
+				border-color: $color-border;
 			}
 		}
 		.select2-arrow {
