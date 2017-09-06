@@ -32,8 +32,8 @@
 }
 
 .newFileMenu .error, #fileList .error {
-	color: #e9322d;
-	border-color: #e9322d;
+	color: $color-error;
+	border-color: $color-error;
 	-webkit-box-shadow: 0 0 6px #f8b9b7;
 	-moz-box-shadow: 0 0 6px #f8b9b7;
 	box-shadow: 0 0 6px #f8b9b7;
