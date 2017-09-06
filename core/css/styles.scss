@@ -165,7 +165,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-	background: nc-lighten($color-main-text, 86%);
+	background: nc-darken($color-main-background, 14%);
 	border-radius: 3px;
 }
 
