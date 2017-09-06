@@ -9,7 +9,6 @@ input {
 }
 
 /* PERSONAL */
-
 .clear {
 	clear: both;
 }
@@ -20,7 +19,6 @@ input {
 }
 
 /* icons for sidebar */
-
 .nav-icon-personal-settings {
 	background-image: url('../img/personal.svg?v=1');
 }
@@ -42,6 +40,9 @@ input {
 }
 
 #avatarform {
+	> h2 {
+		position: relative;
+	}
 	.avatardiv {
 		margin: 10px auto;
 	}
@@ -103,7 +104,8 @@ input {
 	}
 }
 
-#personal-settings-avatar-container, #personal-settings-group-container {
+#personal-settings-avatar-container,
+#personal-settings-group-container {
 	display: inline-block;
 	vertical-align: top;
 	width: 225px;
@@ -113,39 +115,9 @@ input {
 	display: inline-block;
 	max-width: 600px;
 	margin-bottom: 20px;
-}
-
-.personal-settings-container {
-	display: inline-block;
-	max-width: 600px;
-	margin-bottom: 20px;
-	&:after {
-		clear: both;
-	}
 	> div {
 		float: left;
 		width: 300px;
-	}
-}
-
-.profile-settings-container > div {
-	float: left;
-	width: 300px;
-}
-
-#avatarform > h2 {
-	position: relative;
-}
-
-.personal-settings-container > div h2 {
-	position: relative;
-	margin-bottom: 5px;
-	span[class^="icon-"] {
-		padding-left: 16px;
-		background-size: 16px;
-		background-position: left 8px;
-		opacity: .3;
-		cursor: pointer;
 	}
 }
 
@@ -168,25 +140,49 @@ input {
 }
 
 select {
-	&#timezone, &#languageinput {
+	&#timezone,
+	&#languageinput {
 		width: 100%;
 	}
 }
 
 input {
-	&#pass1, &#pass2, &#passwordbutton {
+	&#pass1,
+	&#pass2,
+	&#passwordbutton {
 		width: 100%;
 	}
 }
 
 .personal-settings-container {
-	> div > form span {
-		&[class^="icon-checkmark"], &[class^="icon-error"] {
+	display: inline-block;
+	max-width: 600px;
+	margin-bottom: 20px;
+	&:after {
+		clear: both;
+	}
+	> div {
+		float: left;
+		width: 300px;
+		h2 {
 			position: relative;
-			right: 8px;
-			top: -28px;
-			pointer-events: none;
-			float: right;
+			margin-bottom: 5px;
+			span[class^="icon-"] {
+				padding-left: 16px;
+				background-size: 16px;
+				background-position: left 8px;
+				opacity: .3;
+				cursor: pointer;
+			}
+		}
+		> form span {
+			&[class^="icon-checkmark"], &[class^="icon-error"] {
+				position: relative;
+				right: 8px;
+				top: -28px;
+				pointer-events: none;
+				float: right;
+			}
 		}
 	}
 	.verify {
@@ -210,9 +206,7 @@ input {
 }
 
 /* verify accounts */
-
 /* only show pointer cursor when popup will be there */
-
 .verification-dialog {
 	display: none;
 	right: -9px;
@@ -270,7 +264,8 @@ input {
 	}
 }
 
-#displaynameerror, #displaynamechanged {
+#displaynameerror,
+#displaynamechanged {
 	display: none;
 }
 
@@ -380,7 +375,8 @@ table.nostyle {
 	}
 }
 
-#new-app-login-name, #new-app-password {
+#new-app-login-name,
+#new-app-password {
 	width: 245px;
 	font-family: monospace;
 	background-color: lightyellow;
@@ -412,7 +408,6 @@ table.nostyle {
 }
 
 /* USERS */
-
 #newgroup-init a span {
 	margin-left: 20px;
 	&:before {
@@ -497,14 +492,9 @@ li.active {
 	}
 }
 
-span.utils .delete, .rename {
+span.utils .delete,
+.rename {
 	display: none;
-}
-
-#app-navigation ul li.active > span.utils {
-	.delete, .rename {
-		display: block;
-	}
 }
 
 #usersearchform {
@@ -520,7 +510,6 @@ span.utils .delete, .rename {
 }
 
 /* display table at full width */
-
 table.grid {
 	width: 100%;
 	th {
@@ -569,7 +558,6 @@ span.usersLastLoginTooltip {
 }
 
 /* dropdowns will be relative to this element */
-
 #userlist {
 	position: relative;
 	.mailAddress, .storageLocation, .userBackend, .lastLogin {
@@ -588,22 +576,6 @@ span.usersLastLoginTooltip {
 		position: relative;
 		top: 3px;
 	}
-}
-
-/* because of accessibility the name cell is <th> - therefore we enforce the black color */
-
-/* use same height as in files app */
-
-#newuser {
-	.groups {
-		display: inline;
-	}
-	.groupsListContainer.hidden {
-		display: none;
-	}
-}
-
-#userlist {
 	.groupsListContainer.hidden {
 		display: none;
 	}
@@ -642,6 +614,24 @@ span.usersLastLoginTooltip {
 				margin-left: 5px;
 			}
 		}
+	}
+}
+
+/* because of accessibility the name cell is <th> - therefore we enforce the black color */
+/* use same height as in files app */
+#newuser {
+	/* positioning fixes */
+	padding-left: 3px;
+	.groups {
+		display: inline;
+	}
+	.groupsListContainer.hidden {
+		display: none;
+	}
+	.multiselect {
+		min-width: 150px !important;
+		position: relative;
+		top: -1px;
 	}
 }
 
@@ -726,17 +716,6 @@ input.userFilter {
 	height: 34px;
 }
 
-/* positioning fixes */
-
-#newuser {
-	padding-left: 3px;
-	.multiselect {
-		min-width: 150px !important;
-		position: relative;
-		top: -1px;
-	}
-}
-
 #newusergroups + input[type='submit'] {
 	position: relative;
 	top: -1px;
@@ -798,11 +777,28 @@ input.userFilter {
 }
 
 #app-navigation {
+	/* Navigation icons */
+	img {
+		margin-bottom: -3px;
+		margin-right: 6px;
+		width: 16px;
+	}
+	li span.no-icon {
+		padding-left: 32px;
+	}
+	ul li.active > span.utils {
+		.delete, .rename {
+			display: block;
+		}
+	}
 	.appwarning {
 		background: #fcc;
 	}
 	&.appwarning:hover {
 		background: #fbb;
+	}
+	.app-external, .app-version {
+		color: rgba(85, 85, 85, 0.5);
 	}
 }
 
@@ -810,10 +806,6 @@ span.version {
 	margin-left: 1em;
 	margin-right: 1em;
 	color: #555;
-}
-
-#app-navigation .app-external, .app-version {
-	color: rgba(85, 85, 85, 0.5);
 }
 
 .app-level {
@@ -1096,21 +1088,6 @@ table.grid td.date {
 	margin-top: 20px;
 }
 
-/* ADMIN */
-
-/* Navigation icons */
-
-#app-navigation {
-	img {
-		margin-bottom: -3px;
-		margin-right: 6px;
-		width: 16px;
-	}
-	li span.no-icon {
-		padding-left: 32px;
-	}
-}
-
 #security-warning li {
 	list-style: initial;
 	margin: 10px 0;
@@ -1225,7 +1202,6 @@ span {
 }
 
 /* PASSWORD */
-
 #passwordform .strengthify-wrapper {
 	position: absolute;
 	left: 0;
@@ -1234,7 +1210,6 @@ span {
 }
 
 /* OPERA hack for strengthify*/
-
 doesnotexist:-o-prefocus, .strengthify-wrapper {
 	left: 185px;
 	width: 129px;
@@ -1249,7 +1224,6 @@ doesnotexist:-o-prefocus, .strengthify-wrapper {
 }
 
 /* HELP */
-
 .help-includes {
 	overflow: hidden !important;
 }
