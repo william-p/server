@@ -148,7 +148,7 @@ table tr.mouseOver td {
 	transition: background-color 0.3s ease;
 	background-color: nc-darken($color-main-background, 3%);
 }
-tbody a { color:#000; }
+tbody a { color: $color-main-text; }
 
 span.conflict-path, span.extension, span.uploading, td.date {
 	color: #999;
@@ -761,8 +761,8 @@ table.dragshadow td.size {
 	position: fixed !important;
 	bottom: 44px;
 	width: inherit !important;
-	background-color: #fff;
-	border-right: 1px solid #eee;
+	background-color: $color-main-background;
+	border-right: 1px solid $color-border;
 	z-index:1;
 
 	.quota-container {
