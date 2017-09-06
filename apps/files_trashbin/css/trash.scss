@@ -25,8 +25,8 @@
 	position: fixed !important;
 	bottom: 88px;
 	width: inherit !important;
-	background-color: #fff;
-	border-right: 1px solid #eee;
+	background-color: $color-main-background;
+	border-right: 1px solid $color-border;
 	margin-bottom: 0px !important;
 }
 /* double padding to account for Deleted files entry, issue with Firefox */
