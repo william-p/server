@@ -146,8 +146,8 @@ class IMipPlugin extends SabreIMipPlugin {
 		$l10n = $this->l10nFactory->get($this->appName, $lang);
 		$params = array(
 			'l' => $l10n,
-			'attendee_name' => $recipientName,
-			'invitee_name' => $senderName,
+			'attendee_name' => !empty($recipientName) ? $recipientName : $recipient,
+			'invitee_name' => !empty($senderName) ? $senderName : $sender,
 			'meeting_title' => 'My awesome meeting', // TODO(leon): Retrieve meeting title
 			'meeting_description' => 'Awesome meeting description', // TODO(leon): Retrieve meeting description
 		);
