@@ -141,7 +141,8 @@ class IMipPlugin extends SabreIMipPlugin {
 				break;
 		}
 
-		$lang = $this->getCurrentAttendeeLangOrDefault($iTipMessage, 'en'); // TODO(leon): Retrieve default language
+		$attendee = $this->getCurrentAttendee($iTipMessage);
+		$lang = $this->getAttendeeLangOrDefault($attendee, 'en'); // TODO(leon): Retrieve default language
 		$l10n = $this->l10nFactory->get($this->appName, $lang);
 		$params = array(
 			'l' => $l10n,
@@ -241,19 +242,21 @@ class IMipPlugin extends SabreIMipPlugin {
 		);
 	}
 
-	private function getCurrentAttendeeLangOrDefault($iTipMessage, $default) {
+	private function getCurrentAttendee($iTipMessage) {
 		$vevent = $iTipMessage->message->VEVENT;
 		$attendees = $vevent->select('ATTENDEE');
 		foreach ($attendees as $attendee) {
-			if (strcasecmp($attendee->getValue(), $iTipMessage->recipient) !== 0) {
-				// Not the attendee we're interested in
-				continue;
+			if (strcasecmp($attendee->getValue(), $iTipMessage->recipient) === 0) {
+				return $attendee;
 			}
-			$lang = $attendee->offsetGet('LANGUAGE');
-			if ($lang instanceof Parameter) {
-				return $lang->getValue();
-			}
-			// No language attribute set, fallthrough -> default
+		}
+		return $default;
+	}
+
+	private function getAttendeeLangOrDefault($attendee, $default) {
+		$lang = $attendee->offsetGet('LANGUAGE');
+		if ($lang instanceof Parameter) {
+			return $lang->getValue();
 		}
 		return $default;
 	}
