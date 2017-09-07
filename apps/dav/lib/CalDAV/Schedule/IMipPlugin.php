@@ -144,14 +144,14 @@ class IMipPlugin extends SabreIMipPlugin {
 		$attendee = $this->getCurrentAttendee($iTipMessage);
 		$lang = $this->getAttendeeLangOrDefault($attendee, 'en'); // TODO(leon): Retrieve default language
 		$l10n = $this->l10nFactory->get($this->appName, $lang);
-		$params = array(
+		$templateParams = array(
 			'l' => $l10n,
 			'attendee_name' => !empty($recipientName) ? $recipientName : $recipient,
 			'invitee_name' => !empty($senderName) ? $senderName : $sender,
 			'meeting_title' => 'My awesome meeting', // TODO(leon): Retrieve meeting title
 			'meeting_description' => 'Awesome meeting description', // TODO(leon): Retrieve meeting description
 		);
-		list(/*$htmlBody, */$plainBody) = $this->renderMailTemplates($templateName, $params);
+		list(/*$htmlBody, */$plainBody) = $this->renderMailTemplates($templateName, $templateParams);
 
 		$message = $this->mailer->createMessage()
 			->setReplyTo([$sender => $senderName])
