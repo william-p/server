@@ -283,7 +283,7 @@ class IMipPlugin extends SabreIMipPlugin {
 				return $attendee;
 			}
 		}
-		return $default;
+		return null;
 	}
 
 	private function stringOrDefault($str, $def) {
@@ -291,9 +291,11 @@ class IMipPlugin extends SabreIMipPlugin {
 	}
 
 	private function getAttendeeLangOrDefault($attendee, $default) {
-		$lang = $attendee->offsetGet('LANGUAGE');
-		if ($lang instanceof Parameter) {
-			return $lang->getValue();
+		if ($attendee) {
+			$lang = $attendee->offsetGet('LANGUAGE');
+			if ($lang instanceof Parameter) {
+				return $lang->getValue();
+			}
 		}
 		return $default;
 	}
