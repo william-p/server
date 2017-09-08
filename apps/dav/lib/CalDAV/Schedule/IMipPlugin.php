@@ -176,13 +176,13 @@ class IMipPlugin extends SabreIMipPlugin {
 		$defaultVal = '--';
 		$templateParams = array(
 			'l' => $l10n,
-			'attendee_name' => $this->stringOrDefault($meetingAttendeeName, $defaultVal),
-			'invitee_name' => $this->stringOrDefault($meetingInviteeName, $defaultVal),
-			'meeting_title' => $this->stringOrDefault($meetingTitle, $defaultVal),
-			'meeting_description' => $this->stringOrDefault($meetingDescription, $defaultVal),
+			'attendee_name' => $meetingAttendeeName ?: $defaultVal,
+			'invitee_name' => $meetingInviteeName ?: $defaultVal,
+			'meeting_title' => $meetingTitle ?: $defaultVal,
+			'meeting_description' => $meetingDescription ?: $defaultVal,
 			'meeting_start' => $meetingStart,
 			'meeting_end' => $meetingStart,
-			'meeting_url' => $this->stringOrDefault($meetingUrl, $defaultVal),
+			'meeting_url' => $meetingUrl ?: $defaultVal,
 		);
 		list($plainBody) = $this->renderMailTemplates($templateName, $templateParams);
 
@@ -280,10 +280,6 @@ class IMipPlugin extends SabreIMipPlugin {
 			}
 		}
 		return null;
-	}
-
-	private function stringOrDefault($str, $def) {
-		return $str ?: $def;
 	}
 
 	private function getAttendeeLangOrDefault($attendee, $default) {
