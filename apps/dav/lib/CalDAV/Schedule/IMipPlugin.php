@@ -283,7 +283,7 @@ class IMipPlugin extends SabreIMipPlugin {
 	}
 
 	private function stringOrDefault($str, $def) {
-		return !empty($str) ? $str : $def;
+		return $str ?: $def;
 	}
 
 	private function getAttendeeLangOrDefault($attendee, $default) {
