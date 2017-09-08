@@ -2,7 +2,8 @@
 
 $l = $_['l'];
 
-p($l->t(
+// It's fine to use 'print_unescaped' to print a plain message..
+print_unescaped($l->t(
 'Hello %s,
 
 the meeting with %s was canceled.
