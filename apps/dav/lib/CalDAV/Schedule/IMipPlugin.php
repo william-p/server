@@ -162,8 +162,8 @@ class IMipPlugin extends SabreIMipPlugin {
 		$meetingAttendeeName = !empty($recipientName) ? $recipientName : $recipient;
 		$meetingInviteeName = !empty($senderName) ? $senderName : $sender;
 
-		$meetingTitle = $vevent->DESCRIPTION;
-		$meetingDescription = $vevent->SUMMARY;
+		$meetingTitle = $vevent->SUMMARY;
+		$meetingDescription = $vevent->DESCRIPTION;
 
 		// TODO(leon): Maybe it's a good idea to make this locale dependent?
 		// TODO(leon): Don't show H:i if it's an all-day meeting
