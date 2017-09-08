@@ -86,6 +86,8 @@ $server->addPlugin(new \Sabre\CalDAV\ICSExportPlugin());
 $server->addPlugin(new \OCA\DAV\CalDAV\Schedule\Plugin());
 $server->addPlugin(new \OCA\DAV\CalDAV\Schedule\IMipPlugin(
 	'dav', // TODO(leon): Retrieve dynamically, but where to find it? :(
+	\OC::$server->getUserSession()->getUser()->getUID(),
+	\OC::$server->getConfig(),
 	\OC::$server->getMailer(),
 	\OC::$server->getLogger(),
 	new \OC\AppFramework\Utility\TimeFactory(),

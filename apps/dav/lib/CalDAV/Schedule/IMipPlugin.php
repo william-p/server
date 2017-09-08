@@ -25,6 +25,7 @@ namespace OCA\DAV\CalDAV\Schedule;
 
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Utility\ITimeFactory;
+use OCP\IConfig;
 use OCP\ILogger;
 use OCP\L10N\IFactory as L10NFactory;
 use OCP\Mail\IMailer;
@@ -51,8 +52,14 @@ use Swift_Attachment;
  */
 class IMipPlugin extends SabreIMipPlugin {
 
-	/** @var stromg */
+	/** @var string */
 	private $appName;
+
+	/** @var string */
+	private $userId;
+
+	/** @var IConfig */
+	private $config;
 
 	/** @var IMailer */
 	private $mailer;
@@ -72,14 +79,18 @@ class IMipPlugin extends SabreIMipPlugin {
 	 * Creates the email handler.
 	 *
 	 * @param string $appName
+	 * @param string $userId
+	 * @param IConfig $config
 	 * @param IMailer $mailer
 	 * @param ILogger $logger
 	 * @param ITimeFactory $timeFactory
 	 * @param L10NFactory $l10nFactory
 	 */
-	function __construct($appName, IMailer $mailer, ILogger $logger, ITimeFactory $timeFactory, L10NFactory $l10nFactory) {
+	function __construct($appName, $userId, IConfig $config, IMailer $mailer, ILogger $logger, ITimeFactory $timeFactory, L10NFactory $l10nFactory) {
 		parent::__construct('');
 		$this->appName = $appName;
+		$this->userId = $userId;
+		$this->config = $config;
 		$this->mailer = $mailer;
 		$this->logger = $logger;
 		$this->timeFactory = $timeFactory;
@@ -142,7 +153,8 @@ class IMipPlugin extends SabreIMipPlugin {
 		}
 
 		$attendee = $this->getCurrentAttendee($iTipMessage);
-		$lang = $this->getAttendeeLangOrDefault($attendee, 'en'); // TODO(leon): Retrieve default language
+		$defaultLang = $this->config->getUserValue($this->userId, 'core', 'lang', $this->l10nFactory->findLanguage());
+		$lang = $this->getAttendeeLangOrDefault($attendee, $defaultLang);
 		$l10n = $this->l10nFactory->get($this->appName, $lang);
 		$templateParams = array(
 			'l' => $l10n,
