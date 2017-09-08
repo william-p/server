@@ -184,14 +184,12 @@ class IMipPlugin extends SabreIMipPlugin {
 			'meeting_end' => $meetingStart,
 			'meeting_url' => $this->stringOrDefault($meetingUrl, $defaultVal),
 		);
-		list(/*$htmlBody, */$plainBody) = $this->renderMailTemplates($templateName, $templateParams);
+		list($plainBody) = $this->renderMailTemplates($templateName, $templateParams);
 
 		$message = $this->mailer->createMessage()
 			->setReplyTo([$sender => $senderName])
 			->setTo([$recipient => $recipientName])
 			->setSubject($subject)
-			// TODO(leon): Reenable support for html once we have a good template
-			// ->setHtmlBody($htmlBody)
 			->setPlainBody($plainBody)
 		;
 		// We need to attach the event as 'attachment'
@@ -267,10 +265,8 @@ class IMipPlugin extends SabreIMipPlugin {
 
 	private function renderMailTemplates($name, $params) {
 		$tmplBase = 'mail/' . $name;
-		// $htmlTemplate = new TemplateResponse($this->appName, $tmplBase . '-html', $params, 'blank');
 		$plainTemplate = new TemplateResponse($this->appName, $tmplBase . '-plain', $params, 'blank');
 		return array(
-			// $htmlTemplate->render(),
 			$plainTemplate->render(),
 		);
 	}
