@@ -152,21 +152,37 @@ class IMipPlugin extends SabreIMipPlugin {
 				break;
 		}
 
+		$vevent = $iTipMessage->message->VEVENT;
+
 		$attendee = $this->getCurrentAttendee($iTipMessage);
 		$defaultLang = $this->config->getUserValue($this->userId, 'core', 'lang', $this->l10nFactory->findLanguage());
 		$lang = $this->getAttendeeLangOrDefault($attendee, $defaultLang);
 		$l10n = $this->l10nFactory->get($this->appName, $lang);
+
+		$meetingAttendeeName = !empty($recipientName) ? $recipientName : $recipient;
+		$meetingInviteeName = !empty($senderName) ? $senderName : $sender;
+
+		$meetingTitle = $vevent->DESCRIPTION;
+		$meetingDescription = $vevent->SUMMARY;
+
 		// TODO(leon): Maybe it's a good idea to make this locale dependent?
 		// TODO(leon): Don't show H:i if it's an all-day meeting
 		$dateFormatStr = 'Y-m-d H:i e';
+		$meetingStart = $vevent->DTSTART->getDateTime()->format($dateFormatStr);
+		$meetingEnd = $vevent->DTEND->getDateTime()->format($dateFormatStr);
+
+		$meetingUrl = $vevent->URL;
+
+		$defaultVal = '--';
 		$templateParams = array(
 			'l' => $l10n,
-			'attendee_name' => !empty($recipientName) ? $recipientName : $recipient,
-			'invitee_name' => !empty($senderName) ? $senderName : $sender,
-			'meeting_title' => 'My awesome meeting', // TODO(leon): Retrieve meeting title
-			'meeting_description' => 'Awesome meeting description', // TODO(leon): Retrieve meeting description
-			'meeting_start' => $iTipMessage->message->VEVENT->DTSTART->getDateTime()->format($dateFormatStr),
-			'meeting_end' => $iTipMessage->message->VEVENT->DTEND->getDateTime()->format($dateFormatStr),
+			'attendee_name' => $this->stringOrDefault($meetingAttendeeName, $defaultVal),
+			'invitee_name' => $this->stringOrDefault($meetingInviteeName, $defaultVal),
+			'meeting_title' => $this->stringOrDefault($meetingTitle, $defaultVal),
+			'meeting_description' => $this->stringOrDefault($meetingDescription, $defaultVal),
+			'meeting_start' => $meetingStart,
+			'meeting_end' => $meetingStart,
+			'meeting_url' => $this->stringOrDefault($meetingUrl, $defaultVal),
 		);
 		list(/*$htmlBody, */$plainBody) = $this->renderMailTemplates($templateName, $templateParams);
 
@@ -268,6 +284,10 @@ class IMipPlugin extends SabreIMipPlugin {
 			}
 		}
 		return $default;
+	}
+
+	private function stringOrDefault($str, $def) {
+		return !empty($str) ? $str : $def;
 	}
 
 	private function getAttendeeLangOrDefault($attendee, $default) {
