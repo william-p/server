@@ -75,6 +75,10 @@ class IMipPlugin extends SabreIMipPlugin {
 
 	const MAX_DATE = '2038-01-01';
 
+	const METHOD_REQUEST = 'request';
+	const METHOD_REPLY = 'reply';
+	const METHOD_CANCEL = 'cancel';
+
 	/**
 	 * Creates the email handler.
 	 *
@@ -136,19 +140,19 @@ class IMipPlugin extends SabreIMipPlugin {
 		$recipientName = ($iTipMessage->recipientName) ? $iTipMessage->recipientName : null;
 
 		$subject = 'SabreDAV iTIP message';
-		switch (strtoupper($iTipMessage->method)) {
+		switch (strtolower($iTipMessage->method)) {
 			default: // Treat 'REQUEST' as the default
-			case 'REQUEST' :
+			case self::METHOD_REQUEST:
 				$subject = $summary;
-				$templateName = 'request';
+				$templateName = self::METHOD_REQUEST;
 				break;
-			case 'REPLY' :
+			case self::METHOD_REPLY:
 				$subject = 'Re: ' . $summary;
-				$templateName = 'reply';
+				$templateName = self::METHOD_REPLY;
 				break;
-			case 'CANCEL' :
+			case self::METHOD_CANCEL:
 				$subject = 'Cancelled: ' . $summary;
-				$templateName = 'cancel';
+				$templateName = self::METHOD_CANCEL;
 				break;
 		}
 
@@ -175,7 +179,6 @@ class IMipPlugin extends SabreIMipPlugin {
 
 		$defaultVal = '--';
 		$templateParams = array(
-			'l' => $l10n,
 			'attendee_name' => $meetingAttendeeName ?: $defaultVal,
 			'invitee_name' => $meetingInviteeName ?: $defaultVal,
 			'meeting_title' => $meetingTitle ?: $defaultVal,
@@ -184,13 +187,13 @@ class IMipPlugin extends SabreIMipPlugin {
 			'meeting_end' => $meetingStart,
 			'meeting_url' => $meetingUrl ?: $defaultVal,
 		);
-		list($plainBody) = $this->renderMailTemplates($templateName, $templateParams);
+		$templates = $this->getInviteTemplates($l10n, $templateParams);
 
 		$message = $this->mailer->createMessage()
 			->setReplyTo([$sender => $senderName])
 			->setTo([$recipient => $recipientName])
 			->setSubject($subject)
-			->setPlainBody($plainBody)
+			->setPlainBody($templates[$templateName]->renderText())
 		;
 		// We need to attach the event as 'attachment'
 		// Swiftmail can't properly handle inline-multipart-based files
@@ -263,12 +266,43 @@ class IMipPlugin extends SabreIMipPlugin {
 		return $lastOccurrence < $currentTime;
 	}
 
-	private function renderMailTemplates($name, $params) {
-		$tmplBase = 'mail/' . $name;
-		$plainTemplate = new TemplateResponse($this->appName, $tmplBase . '-plain', $params, 'blank');
-		return array(
-			$plainTemplate->render(),
-		);
+	private function getEmptyInviteTemplate($scope) {
+		return $this->mailer->createEMailTemplate('dav.invite.' . $scope, array());
+	}
+
+	private function getInviteTemplates($l10n, $_) {
+		$ret = array();
+		$requestTmpl = $ret[self::METHOD_REQUEST] = $this->getEmptyInviteTemplate(self::METHOD_REQUEST);
+		$replyTmpl = $ret[self::METHOD_REPLY] = $this->getEmptyInviteTemplate(self::METHOD_REPLY);
+		$cancelTmpl = $ret[self::METHOD_CANCEL] = $this->getEmptyInviteTemplate(self::METHOD_CANCEL);
+
+		$commonStart = $l10n->t('Hello %s,', array($_['attendee_name']));
+		$commonEnd = $l10n->t(
+'      Title: %s
+Description: %s
+      Start: %s
+        End: %s
+        URL: %s', array(
+			$_['meeting_title'],
+			$_['meeting_description'],
+			$_['meeting_start'],
+			$_['meeting_end'],
+			$_['meeting_url'],
+		));
+
+		$requestTmpl->addBodyText('', $commonStart);
+		$requestTmpl->addBodyText('', $l10n->t('%s has invited you to a meeting.', array($_['invitee_name'])));
+		$requestTmpl->addBodyText('', $commonEnd);
+
+		$replyTmpl->addBodyText('', $commonStart);
+		$replyTmpl->addBodyText('', $l10n->t('the meeting with %s was updated.', array($_['invitee_name'])));
+		$replyTmpl->addBodyText('', $commonEnd);
+
+		$cancelTmpl->addBodyText('', $commonStart);
+		$cancelTmpl->addBodyText('', $l10n->t('the meeting with %s was canceled.', array($_['invitee_name'])));
+		$cancelTmpl->addBodyText('', $commonEnd);
+
+		return $ret;
 	}
 
 	private function getCurrentAttendee($iTipMessage) {
