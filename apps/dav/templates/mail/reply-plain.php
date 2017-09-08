@@ -10,11 +10,17 @@ the meeting with %s was updated.
 
       Title: %s
 Description: %s
+      Start: %s
+        End: %s
+        URL: %s
 ', array(
 	$_['attendee_name'],
 	$_['invitee_name'],
 	$_['meeting_title'],
 	$_['meeting_description'],
+	$_['meeting_start'],
+	$_['meeting_end'],
+	$_['meeting_url'],
 )));
 
 /*
