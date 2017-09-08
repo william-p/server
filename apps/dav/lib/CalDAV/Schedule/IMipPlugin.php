@@ -276,8 +276,8 @@ class IMipPlugin extends SabreIMipPlugin {
 		$replyTmpl = $ret[self::METHOD_REPLY] = $this->getEmptyInviteTemplate(self::METHOD_REPLY);
 		$cancelTmpl = $ret[self::METHOD_CANCEL] = $this->getEmptyInviteTemplate(self::METHOD_CANCEL);
 
-		$commonStart = $l10n->t('Hello %s,', array($_['attendee_name']));
-		$commonEnd = $l10n->t(
+		$commonPlainBodyStart = $l10n->t('Hello %s,', array($_['attendee_name']));
+		$commonPlainBodyEnd = $l10n->t(
 '      Title: %s
 Description: %s
       Start: %s
@@ -290,17 +290,17 @@ Description: %s
 			$_['meeting_url'],
 		));
 
-		$requestTmpl->addBodyText('', $commonStart);
+		$requestTmpl->addBodyText('', $commonPlainBodyStart);
 		$requestTmpl->addBodyText('', $l10n->t('%s has invited you to a meeting.', array($_['invitee_name'])));
-		$requestTmpl->addBodyText('', $commonEnd);
+		$requestTmpl->addBodyText('', $commonPlainBodyEnd);
 
-		$replyTmpl->addBodyText('', $commonStart);
+		$replyTmpl->addBodyText('', $commonPlainBodyStart);
 		$replyTmpl->addBodyText('', $l10n->t('the meeting with %s was updated.', array($_['invitee_name'])));
-		$replyTmpl->addBodyText('', $commonEnd);
+		$replyTmpl->addBodyText('', $commonPlainBodyEnd);
 
-		$cancelTmpl->addBodyText('', $commonStart);
+		$cancelTmpl->addBodyText('', $commonPlainBodyStart);
 		$cancelTmpl->addBodyText('', $l10n->t('the meeting with %s was canceled.', array($_['invitee_name'])));
-		$cancelTmpl->addBodyText('', $commonEnd);
+		$cancelTmpl->addBodyText('', $commonPlainBodyEnd);
 
 		return $ret;
 	}
